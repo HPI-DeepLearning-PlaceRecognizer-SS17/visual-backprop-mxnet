@@ -47,10 +47,13 @@ class VisualBackpropPlotter:
             data_iter = execution_params.locals['train_data']
             batch_size = 1
 
-            input_data_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in data_iter.provide_data]
-            label_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in data_iter.provide_label]
+            #input_data_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in data_iter.provide_data]
+            #label_shapes = [(description[0], (batch_size, ) + description.shape[1:]) for description in data_iter.provide_label]
 
-            executor = mx.module.Module(context=context, symbol=symbol)
+            input_data_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in model._data_shapes]
+            label_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in model._label_shapes]
+
+            executor = mx.module.Module(context=context, symbol=symbol, label_names=('label',))
             executor.bind(input_data_shapes, label_shapes, for_training=False, grad_req='null')
 
             arg_params, aux_params = model.get_params()
