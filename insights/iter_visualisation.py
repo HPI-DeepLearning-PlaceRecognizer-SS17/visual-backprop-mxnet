@@ -50,8 +50,16 @@ class VisualBackpropPlotter:
             #input_data_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in data_iter.provide_data]
             #label_shapes = [(description[0], (batch_size, ) + description.shape[1:]) for description in data_iter.provide_label]
 
+            print('VisualBackprop: Existing model shapes:')
+            print('data[0]:  ', model._data_shapes[0])
+            print('label[0]: ', model._label_shapes[0])
+
             input_data_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in model._data_shapes]
             label_shapes = [(description.name, (batch_size, ) + description.shape[1:]) for description in model._label_shapes]
+
+            print('Shapes to be used:')
+            print('data[0]:  ', input_data_shapes[0])
+            print('label[0]: ', label_shapes[0])
 
             executor = mx.module.Module(context=context, symbol=symbol, label_names=('label',))
             executor.bind(input_data_shapes, label_shapes, for_training=False, grad_req='null')
